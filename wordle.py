@@ -11,9 +11,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import random
 
-
+file1 = open ("5-wordsource.txt", "r")
+t = random.randrange(1, 45)
+uu = file1.readlines()[t]
+e = str(uu.capitalize().strip())
 class Ui_MainWindow(object):
-    global l
+    
     def setupUi(self, MainWindow):
          
         
@@ -34,6 +37,49 @@ class Ui_MainWindow(object):
         self.label.setText("")
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
+        
+        self.first = QtWidgets.QLineEdit(self.layoutWidget)
+        self.first.setMaxLength(1)
+        self.first.setObjectName("first")
+        self.horizontalLayout.addWidget(self.first)
+        
+        
+        self.second = QtWidgets.QLineEdit(self.layoutWidget)
+        self.second.setMaxLength(1)
+        self.second.setObjectName("second")
+        self.horizontalLayout.addWidget(self.second)
+        
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(330, 50, 55, 16))
+        self.label.setText("")
+        self.label.setObjectName("label")
+        
+        self.third = QtWidgets.QLineEdit(self.layoutWidget)
+        self.third.setText("")
+        self.third.setMaxLength(1)
+        self.third.setObjectName("third")
+        self.horizontalLayout.addWidget(self.third) 
+              
+        
+        
+        
+        self.fourth = QtWidgets.QLineEdit(self.layoutWidget)
+        self.fourth.setMaxLength(1)
+        self.fourth.setObjectName("fourth")
+        self.horizontalLayout.addWidget(self.fourth)
+        
+        
+        self.fifth = QtWidgets.QLineEdit(self.layoutWidget)
+        self.fifth.setMaxLength(1)
+        self.fifth.setObjectName("fifth")
+        self.fifth.returnPressed.connect(self.enter)
+        
+        
+        self.horizontalLayout.addWidget(self.fifth)
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(250, 260, 93, 28))
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton.setEnabled(False)
         
         self.first = QtWidgets.QLineEdit(self.layoutWidget)
         self.first.setMaxLength(1)
@@ -73,6 +119,10 @@ class Ui_MainWindow(object):
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(250, 260, 93, 28))
         self.pushButton.setObjectName("pushButton")
+        self.pushButton.setEnabled(False)
+        
+        
+        
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
@@ -92,9 +142,9 @@ class Ui_MainWindow(object):
     
     def enter(self):
         g = ["first","second","third","fourth","fifth"]
-        h = "jjjj"
+        h = e
         a = []
-        
+        j = 0
         for xx in g:
             widget= getattr(self,xx)
             widget.setReadOnly(True)
@@ -105,7 +155,8 @@ class Ui_MainWindow(object):
                 if h[x] == a[x]:
                     y = getattr(self,g[x])
                     y.setStyleSheet("background-color: rgb(0, 170, 0);")
-                
+                    j +=1
+                    
                 elif a[x] in h:
                     p = getattr(self,g[x])
                     p.setStyleSheet("background-color: rgb(255, 255, 0);")
@@ -115,7 +166,11 @@ class Ui_MainWindow(object):
                     i.setStyleSheet("background-color: rgb(255, 0, 0);")   
                     
                     
-        
+                if j ==5:
+                    self.pushButton.setEnabled(True)
+                    MainWindow.show()
+
+                    
         
         
             # if h[x] in h:
