@@ -395,8 +395,6 @@ class statistic(object):
         self.label_8.setText(_translate("MainWindow", "Most letter seen: "))
 
 
-
-        
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
