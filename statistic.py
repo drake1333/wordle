@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
+class statistic(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(620, 600)
@@ -94,13 +94,4 @@ class Ui_MainWindow(object):
         self.label_6.setText(_translate("MainWindow", "Lose:"))
         self.label_7.setText(_translate("MainWindow", "Win/Lose Percentage:"))
         self.label_8.setText(_translate("MainWindow", "Most letter seen: "))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+        
