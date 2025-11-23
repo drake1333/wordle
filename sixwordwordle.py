@@ -334,14 +334,13 @@ class fivewordwordle(object):
             oo = widget.text() 
             a.append(oo)
         
+        print(a)   
         if "" in a:
-                self.notenoughletter()
-                return     
-        
+            self.notenoughletter()
+            return 
         
         
         for x in range(6):
-                counter += 1
                 y = getattr(self,g[x])
                 y.setReadOnly(True)
                 if e[x] == a[x]:
@@ -376,7 +375,6 @@ class fivewordwordle(object):
         letterbox.setWindowTitle("lose")
         letterbox.setText("Not enough letter")
         letterbox.exec_()
-        
         g = dictionary[counter]
         for x in g:
             widget= getattr(self,x)

@@ -304,10 +304,12 @@ class fourwordwordle(object):
         letterbox.setWindowTitle("lose")
         letterbox.setText("Not enough letter")
         letterbox.exec_()
+        global counter
         g = dictionary[counter]
         for x in g:
             widget= getattr(self,x)
             widget.clear()
+        counter -=1
             
     def losedialogbox(self):
         losebox = QtWidgets.QMessageBox()
