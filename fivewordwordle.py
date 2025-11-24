@@ -5,9 +5,8 @@ import random
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
+import enchant
 
-counter = 0
-winstreak = 0
 dictionary = {
 1: ["lineEdit_a","lineEdit_b","lineEdit_c","lineEdit_d","lineEdit_e"],
 2:  ["lineEdit_f","lineEdit_g","lineEdit_h","lineEdit_m","lineEdit_i"],
@@ -16,16 +15,14 @@ dictionary = {
 5:  ["lineEdit_u","lineEdit_v","lineEdit_w","lineEdit_x","lineEdit_y"]
     
 }
-def randomword():
-    with open ("5-wordsource.txt", "r") as file:
-        t = random.randrange(1, 50)
-        uu = file.readlines()[t]
-        e = str(uu.upper().strip())
-        return e
+
 
 
 class fivewordwordle(object):
-     
+    def __init__(self):
+        self.counter = 0
+        self.winstreak = 0
+        
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(834, 499)
@@ -49,7 +46,7 @@ class fivewordwordle(object):
         
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(330, 50, 55, 16))
-        self.label.setText(randomword())
+        self.label.setText(self.randomword())
         self.label.setObjectName("label")
         self.winstreak2 = QtWidgets.QLabel(self.centralwidget)
         self.winstreak2.setGeometry(QtCore.QRect(160, 40, 81, 21))
@@ -57,7 +54,7 @@ class fivewordwordle(object):
         font.setPointSize(10)
         self.winstreak2.setFont(font)
         self.winstreak2.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.winstreak2.setText(str(winstreak))
+        self.winstreak2.setText(str(self.winstreak))
         self.winstreak2.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
         self.winstreak2.setObjectName("winstreak2")
         self.Winstreak = QtWidgets.QLabel(self.centralwidget)
@@ -276,17 +273,25 @@ class fivewordwordle(object):
         self.pushButton_2.setText(_translate("MainWindow", "Next"))
         self.Winstreak.setText(_translate("MainWindow", "WinStreak:"))
     
+    def randomword(self):
+        with open ("5-wordsource.txt", "r") as file:
+            t = random.randrange(1, 50)
+            uu = file.readlines()[t]
+            e = str(uu.upper().strip())
+            return e
+        
     def change(self,text):
         letterbox = QtWidgets.QDialog()
         letter = letterbox.sender()
         letter.setText(text.upper())
    
     def enter(self):
-        global counter
-        counter += 1
-        g = dictionary[counter]
+        
+        self.counter += 1
+        g = dictionary[self.counter]
         a = []
         j = 0
+        d = enchant.Dict("en_US")
         e = self.label.text()
         for xx in g:
             widget= getattr(self,xx)
@@ -297,6 +302,11 @@ class fivewordwordle(object):
             self.notenoughletter()
             return 
         
+        p = "".join(a)
+        
+        if not d.check(p):
+            self.notaword()
+            return
         
         for x in range(5):
                 y = getattr(self,g[x])
@@ -315,30 +325,40 @@ class fivewordwordle(object):
                     self.pushButton_2.setEnabled(True)
                     
         
-        if counter == 5:
+        if self.counter == 5:
             self.losedialogbox()
     
         
     
     def next( self):
-        global winstreak
-        global counter
-        winstreak += 1
-        counter = 0
+        self.winstreak += 1
+        self.counter = 0
         ui4.setupUi(MainWindow4)
         MainWindow4.show()
+    
+    def  notaword(self):
+        letterbox = QtWidgets.QMessageBox()
+        letterbox.setWindowTitle("lose")
+        letterbox.setText("invalid word")
+        letterbox.exec_()
+        
+        g = dictionary[self.counter]
+        for x in g:
+            widget= getattr(self,x)
+            widget.clear()
+        self.counter -=1
         
     def  notenoughletter(self):
         letterbox = QtWidgets.QMessageBox()
         letterbox.setWindowTitle("lose")
         letterbox.setText("Not enough letter")
         letterbox.exec_()
-        global counter
-        g = dictionary[counter]
+        
+        g = dictionary[self.counter]
         for x in g:
             widget= getattr(self,x)
             widget.clear()
-        counter -=1
+        self.counter -=1
             
     def losedialogbox(self):
         losebox = QtWidgets.QMessageBox()

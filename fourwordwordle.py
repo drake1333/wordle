@@ -6,26 +6,23 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
 
-counter = 0
-winstreak = 0
+import enchant
 dictionary = {
-1: ["lineEdit_a","lineEdit_b","lineEdit_c","lineEdit_d"],
-2:  ["lineEdit_f","lineEdit_g","lineEdit_h","lineEdit_m"],
-3:  ["lineEdit_j","lineEdit_k","lineEdit_l","lineEdit_n"],
-4:  ["lineEdit_p","lineEdit_q","lineEdit_r","lineEdit_s"],
-5:  ["lineEdit_u","lineEdit_v","lineEdit_w","lineEdit_x"]
-    
+    1: ["lineEdit_a","lineEdit_b","lineEdit_c","lineEdit_d"],
+    2:  ["lineEdit_f","lineEdit_g","lineEdit_h","lineEdit_m"],
+    3:  ["lineEdit_j","lineEdit_k","lineEdit_l","lineEdit_n"],
+    4:  ["lineEdit_p","lineEdit_q","lineEdit_r","lineEdit_s"],
+    5:  ["lineEdit_u","lineEdit_v","lineEdit_w","lineEdit_x"]
+        
 }
-def randomword():
-    with open ("4-wordsource.txt", "r") as file:
-        t = random.randrange(1, 50)
-        uu = file.readlines()[t]
-        e = str(uu.upper().strip())
-        return e
+
 
 
 class fourwordwordle(object):
-     
+    def __init__(self):
+        self.counter = 0
+        self.winstreak =0
+        
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(834, 499)
@@ -49,7 +46,7 @@ class fourwordwordle(object):
         
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(330, 50, 55, 16))
-        self.label.setText(randomword())
+        self.label.setText(self.randomword())
         self.label.setObjectName("label")
         self.winstreak2 = QtWidgets.QLabel(self.centralwidget)
         self.winstreak2.setGeometry(QtCore.QRect(160, 40, 81, 21))
@@ -57,20 +54,24 @@ class fourwordwordle(object):
         font.setPointSize(10)
         self.winstreak2.setFont(font)
         self.winstreak2.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.winstreak2.setText(str(winstreak))
+        self.winstreak2.setText(str(self.winstreak))
         self.winstreak2.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
         self.winstreak2.setObjectName("winstreak2")
+        
         self.Winstreak = QtWidgets.QLabel(self.centralwidget)
         self.Winstreak.setGeometry(QtCore.QRect(80, 40, 81, 21))
+        
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Winstreak.setFont(font)
         self.Winstreak.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.Winstreak.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
         self.Winstreak.setObjectName("Winstreak")
+        
         self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setGeometry(QtCore.QRect(40, 110, 761, 271))
         self.widget.setObjectName("widget")
+        
         self.gridLayout = QtWidgets.QGridLayout(self.widget)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
@@ -246,6 +247,13 @@ class fourwordwordle(object):
         self.pushButton.setText(_translate("MainWindow", "Back"))
         self.pushButton_2.setText(_translate("MainWindow", "Next"))
         self.Winstreak.setText(_translate("MainWindow", "WinStreak:"))
+        
+    def randomword(self):
+        with open ("4-wordsource.txt", "r") as file:
+            t = random.randrange(1, 50)
+            uu = file.readlines()[t]
+            e = str(uu.upper().strip())
+            return e
     
     def change(self,text):
         letterbox = QtWidgets.QDialog()
@@ -253,9 +261,9 @@ class fourwordwordle(object):
         letter.setText(text.upper())
    
     def enter(self):
-        global counter
-        counter += 1
-        g = dictionary[counter]
+        d = enchant.Dict("en_US")
+        self.counter += 1
+        g = dictionary[self.counter]
         a = []
         j = 0
         e = self.label.text()
@@ -268,6 +276,11 @@ class fourwordwordle(object):
             self.notenoughletter()
             return 
         
+        p = "".join(a)
+        
+        if not d.check(p):
+            self.notaword()
+            return
         
         for x in range(4):
                 y = getattr(self,g[x])
@@ -286,16 +299,24 @@ class fourwordwordle(object):
                     self.pushButton_2.setEnabled(True)
                     
         
-        if counter == 4:
+        if self.counter == 4:
             self.losedialogbox()
     
+    def  notaword(self):
+        letterbox = QtWidgets.QMessageBox()
+        letterbox.setWindowTitle("lose")
+        letterbox.setText("invalid word")
+        letterbox.exec_()
         
+        g = dictionary[self.counter]
+        for x in g:
+            widget= getattr(self,x)
+            widget.clear()
+        self.counter -=1    
     
     def next( self):
-        global winstreak
-        global counter
-        winstreak += 1
-        counter = 0
+        self.winstreak += 1
+        self.counter = 0
         ui5.setupUi(MainWindow5)
         MainWindow5.show()
         
@@ -304,12 +325,12 @@ class fourwordwordle(object):
         letterbox.setWindowTitle("lose")
         letterbox.setText("Not enough letter")
         letterbox.exec_()
-        global counter
-        g = dictionary[counter]
+       
+        g = dictionary[self.counter]
         for x in g:
             widget= getattr(self,x)
             widget.clear()
-        counter -=1
+        self.counter -=1
             
     def losedialogbox(self):
         losebox = QtWidgets.QMessageBox()
