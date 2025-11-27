@@ -17,7 +17,6 @@ from database import get_db
 import sqlite3
 import enchant
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import time
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -28,6 +27,24 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+# --- GLOBAL for current logged in user ---
+CURRENT_USER = None
+
+# ensure statistics table exists at startup
+def ensure_statistics_table():
+    conn, cursor = get_db()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS statistics (
+        username TEXT PRIMARY KEY,
+        wins INTEGER DEFAULT 0,
+        losses INTEGER DEFAULT 0
+    )
+    """)
+    conn.commit()
+    conn.close()
+
+ensure_statistics_table()
 
 dictionary1 = {
 1: ["lineEdit_a","lineEdit_b","lineEdit_c","lineEdit_d","lineEdit_e"],
@@ -57,7 +74,32 @@ dictionary3 = {
 }
 
 
+# ---------------- Helper: update stats in DB ----------------
+def update_stats_db(username, win: bool):
+    """
+    Update statistics table for `username`.
+    If row doesn't exist, insert one.
+    """
+    if not username:
+        return False
+    conn, cursor = get_db()
+    cursor.execute("SELECT wins, losses FROM statistics WHERE username=?", (username,))
+    res = cursor.fetchone()
+    if res:
+        if win:
+            cursor.execute("UPDATE statistics SET wins = wins + 1 WHERE username=?", (username,))
+        else:
+            cursor.execute("UPDATE statistics SET losses = losses + 1 WHERE username=?", (username,))
+    else:
+        wins = 1 if win else 0
+        losses = 0 if win else 1
+        cursor.execute("INSERT INTO statistics (username, wins, losses) VALUES (?, ?, ?)",
+                       (username, wins, losses))
+    conn.commit()
+    conn.close()
+    return True
 
+# ---------------- Classes for GUIs ----------------
 
 class sixwordwordle(object):
     def __init__(self):
@@ -380,6 +422,7 @@ class sixwordwordle(object):
 
       
 
+
         if "" in a:
             self.notenoughletter()
             return
@@ -418,6 +461,10 @@ class sixwordwordle(object):
 
         
         if self.counter == 5:
+            # user ran out of tries -> loss
+            # update stats for loss
+            if CURRENT_USER:
+                update_stats_db(CURRENT_USER, win=False)
             self.losedialogbox()
 
     
@@ -434,7 +481,12 @@ class sixwordwordle(object):
         self.counter -=1    
     
     def next( self):
-        
+        # Called when user has guessed correctly and clicks Next
+        # Update stats to reflect a win
+        if CURRENT_USER:
+            update_stats_db(CURRENT_USER, win=True)
+        else:
+            QMessageBox.information(None, "Notice", "No current user — stats not recorded.")
         self.winstreak += 1
         self.counter = 0
         ui6.setupUi(MainWindow6)
@@ -455,7 +507,8 @@ class sixwordwordle(object):
         losebox.setWindowTitle("lose")
         losebox.setText("You lose")
         losebox.exec_()
-        losebox.clickedButton(self.hidewindow())
+        # After loss dialog, hide/close this game window
+        self.hidewindow()
     
     def hidewindow(self):
         MainWindow6.hide()
@@ -555,7 +608,7 @@ class fourwordwordle(object):
         self.lineEdit_d.textChanged.connect(self.change)
         self.lineEdit_d.returnPressed.connect(self.enter)
        
-        
+       
         self.lineEdit_f = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_f.setObjectName("lineEdit_f")
         self.lineEdit_f.setMaxLength(1)
@@ -585,7 +638,7 @@ class fourwordwordle(object):
         self.lineEdit_m.textChanged.connect(self.change)
         self.lineEdit_m.returnPressed.connect(self.enter)
        
-        
+       
         self.lineEdit_j = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_j.setObjectName("lineEdit_j")
         self.lineEdit_j.setMaxLength(1)
@@ -645,7 +698,7 @@ class fourwordwordle(object):
         self.lineEdit_s.textChanged.connect(self.change)
         self.lineEdit_s.returnPressed.connect(self.enter)
        
-        
+       
         self.lineEdit_u = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_u.setObjectName("lineEdit_u")
         self.lineEdit_u.setMaxLength(1)
@@ -759,6 +812,9 @@ class fourwordwordle(object):
 
         
         if self.counter == 5:
+            # loss
+            if CURRENT_USER:
+                update_stats_db(CURRENT_USER, win=False)
             self.losedialogbox()
 
     
@@ -775,6 +831,11 @@ class fourwordwordle(object):
         self.counter -=1    
     
     def next( self):
+        # win: update stats
+        if CURRENT_USER:
+            update_stats_db(CURRENT_USER, win=True)
+        else:
+            QMessageBox.information(None, "Notice", "No current user — stats not recorded.")
         self.winstreak += 1
         self.counter = 0
         ui5.setupUi(MainWindow5)
@@ -798,7 +859,7 @@ class fourwordwordle(object):
         losebox.setWindowTitle("lose")
         losebox.setText("You lose")
         losebox.exec_()
-        losebox.clickedButton(self.hidewindow())
+        self.hidewindow()
     
     def hidewindow(self):
         MainWindow5.hide()
@@ -1126,12 +1187,18 @@ class fivewordwordle(object):
 
         
         if self.counter == 5:
+            if CURRENT_USER:
+                update_stats_db(CURRENT_USER, win=False)
             self.losedialogbox()
 
     
         
     
     def next( self):
+        if CURRENT_USER:
+            update_stats_db(CURRENT_USER, win=True)
+        else:
+            QMessageBox.information(None, "Notice", "No current user — stats not recorded.")
         self.winstreak += 1
         self.counter = 0
         ui4.setupUi(MainWindow4)
@@ -1166,7 +1233,7 @@ class fivewordwordle(object):
         losebox.setWindowTitle("lose")
         losebox.setText("You lose")
         losebox.exec_()
-        losebox.clickedButton(self.hidewindow())
+        self.hidewindow()
     
     def hidewindow(self):
         MainWindow4.hide()
@@ -1215,8 +1282,6 @@ class mainwindow(object):
         
         
         
-        
-        
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(230, 320, 141, 41))
         self.pushButton_3.setObjectName("pushButton_3")
@@ -1262,7 +1327,9 @@ class mainwindow(object):
         exit()
         
     def statistic(self):
+        # show statistics window, but first load the current user's stats
         MainWindow1.hide()
+        ui3.load_stats()
         MainWindow3.show()
     def text(self):
         gg = (self.comboBox.currentText())
@@ -1345,8 +1412,9 @@ class login(object):
         self.pushButton.setText(_translate("Dialog", "LOGIN"))
         self.label_5.setText(_translate("Dialog", "Sign-up"))
        
-        
+       
     def login_check(self):
+        global CURRENT_USER
         username = self.lineEdit.text()
         password = self.lineEdit_2.text()
 
@@ -1354,10 +1422,10 @@ class login(object):
         cursor.execute("SELECT * FROM users WHERE username=? AND password=?", 
                     (username, password))
         result = cursor.fetchone()
-        print(result)
         conn.close()
 
         if result:
+            CURRENT_USER = username
             MainWindow2.hide()
             MainWindow1.show()
             
@@ -1367,11 +1435,9 @@ class login(object):
         MainWindow2.hide()
         MainWindow1.show()
     
-    def signup(Self,*args):
+    def signup(self,*args):
         MainWindow2.hide()
         MainWindow7.show()
-
-
 
 class statistic(object):
     def setupUi(self, MainWindow):
@@ -1391,12 +1457,7 @@ class statistic(object):
         font.setPointSize(18)
         self.label.setFont(font)
         self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(self.frame)
-        self.label_2.setGeometry(QtCore.QRect(40, 160, 131, 41))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        self.label_2.setFont(font)
-        self.label_2.setObjectName("label_2")
+       
         self.label_3 = QtWidgets.QLabel(self.frame)
         self.label_3.setGeometry(QtCore.QRect(40, 50, 141, 41))
         font = QtGui.QFont()
@@ -1453,7 +1514,7 @@ class statistic(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label.setText(_translate("MainWindow", "Statistics"))
-        self.label_2.setText(_translate("MainWindow", "Time:"))
+       
         self.label_3.setText(_translate("MainWindow", "Name: "))
         self.label_4.setText(_translate("MainWindow", "UID: "))
         self.label_5.setText(_translate("MainWindow", "Wins:"))
@@ -1464,6 +1525,57 @@ class statistic(object):
     def back(self):
         MainWindow3.hide()
         MainWindow1.show()
+
+    def load_stats(self):
+        """
+        Load current user's stats from DB and set UI labels.
+        """
+        if not CURRENT_USER:
+            QMessageBox.information(None, "No user", "No user logged in.")
+            # clear labels / show N/A
+            self.label_3.setText("Name: ")
+            self.label_4.setText("UID: ")
+            self.label_5.setText("Wins:")
+            self.label_6.setText("Lose:")
+            self.label_7.setText("Win/Lose Percentage:")
+            return
+
+        # fetch wins/losses
+        conn, cursor = get_db()
+        cursor.execute("SELECT wins, losses FROM statistics WHERE username=?", (CURRENT_USER,))
+        res = cursor.fetchone()
+
+        # attempt to fetch UID from users table (if present)
+        cursor.execute("SELECT rowid FROM users WHERE username=?", (CURRENT_USER,))
+        uid_res = cursor.fetchone()
+
+        conn.close()
+
+        self.label_3.setText(f"Name: {CURRENT_USER}")
+        if uid_res:
+            self.label_4.setText(f"UID: {uid_res[0]}")
+        else:
+            self.label_4.setText("UID: N/A")
+
+        if res:
+            wins, losses = res
+        else:
+            wins, losses = 0, 0
+
+        self.label_5.setText(f"Wins: {wins}")
+        self.label_6.setText(f"Lose: {losses}")
+
+        total = wins + losses
+        if total > 0:
+            pct = round(wins / total * 100, 2)
+        else:
+            pct = 0.0
+
+        self.label_7.setText(f"Win/Lose Percentage: {pct}%")
+        # placeholder for most seen letter
+        self.label_8.setText("Most letter seen: N/A")
+
+
 class signup(object):
     def setupUi(self, Dialog):
         self.Dialog = Dialog  
@@ -1559,6 +1671,8 @@ class signup(object):
         self.pushButton.setText(_translate("Dialog", "Sign-up"))
         self.label_5.setText(_translate("Dialog", "Confirm Password:"))
 
+
+# ---------------- Entry point ----------------
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -1590,4 +1704,3 @@ if __name__ == "__main__":
     ui7.setupUi(MainWindow7)
     MainWindow2.show()
     sys.exit(app.exec_())
-    
