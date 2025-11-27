@@ -5,24 +5,24 @@ import random
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
-import enchant
 
+import enchant
 dictionary = {
-1: ["lineEdit_a","lineEdit_b","lineEdit_c","lineEdit_d","lineEdit_e"],
-2:  ["lineEdit_f","lineEdit_g","lineEdit_h","lineEdit_m","lineEdit_i"],
-3:  ["lineEdit_j","lineEdit_k","lineEdit_l","lineEdit_n","lineEdit_o"],
-4:  ["lineEdit_p","lineEdit_q","lineEdit_r","lineEdit_s","lineEdit_t"],
-5:  ["lineEdit_u","lineEdit_v","lineEdit_w","lineEdit_x","lineEdit_y"]
+1:  ["lineEdit_a","lineEdit_b","lineEdit_c","lineEdit_d","lineEdit_e", "lineEdit_za"],
+2:  ["lineEdit_f","lineEdit_g","lineEdit_h","lineEdit_m","lineEdit_i","lineEdit_zb"],
+3:  ["lineEdit_j","lineEdit_k","lineEdit_l","lineEdit_n","lineEdit_o","lineEdit_zc"],
+4:  ["lineEdit_p","lineEdit_q","lineEdit_r","lineEdit_s","lineEdit_t","lineEdit_zd"],
+5:  ["lineEdit_u","lineEdit_v","lineEdit_w","lineEdit_x","lineEdit_y","lineEdit_z"]
     
 }
 
 
 
-class fivewordwordle(object):
+class sixwordwordle(object):
     def __init__(self):
         self.counter = 0
         self.winstreak = 0
-        
+     
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(834, 499)
@@ -106,9 +106,17 @@ class fivewordwordle(object):
         self.lineEdit_e.setObjectName("lineEdit_e")
         self.lineEdit_e.setMaxLength(1)
         self.gridLayout.addWidget(self.lineEdit_e, 0, 4, 1, 1)
-        self.lineEdit_e.returnPressed.connect(self.enter)
         self.lineEdit_e.setValidator(validator)
         self.lineEdit_e.textChanged.connect(self.change)
+        
+        self.lineEdit_za = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_za.setObjectName("lineEdit_y")
+        self.lineEdit_za.setMaxLength(1)
+        self.lineEdit_za.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_za, 0, 5, 1, 1)
+        self.lineEdit_za.setValidator(validator)
+        self.lineEdit_za.textChanged.connect(self.change)
+        self.lineEdit_za.returnPressed.connect(self.enter)
         
         self.lineEdit_f = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_f.setObjectName("lineEdit_f")
@@ -142,9 +150,17 @@ class fivewordwordle(object):
         self.lineEdit_i.setObjectName("lineEdit_i")
         self.lineEdit_i.setMaxLength(1)
         self.gridLayout.addWidget(self.lineEdit_i, 1, 4, 1, 1)
-        self.lineEdit_i.returnPressed.connect(self.enter)
         self.lineEdit_i.setValidator(validator)
         self.lineEdit_i.textChanged.connect(self.change)
+        
+        self.lineEdit_zb = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_zb.setObjectName("lineEdit_y")
+        self.lineEdit_zb.setMaxLength(1)
+        self.lineEdit_zb.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_zb, 1, 5, 1, 1)
+        self.lineEdit_zb.setValidator(validator)
+        self.lineEdit_zb.textChanged.connect(self.change)
+        self.lineEdit_zb.returnPressed.connect(self.enter)
         
         self.lineEdit_j = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_j.setObjectName("lineEdit_j")
@@ -178,10 +194,17 @@ class fivewordwordle(object):
         self.lineEdit_o.setObjectName("lineEdit_o")
         self.lineEdit_o.setMaxLength(1)
         self.gridLayout.addWidget(self.lineEdit_o, 2, 4, 1, 1)
-        self.lineEdit_o.returnPressed.connect(self.enter)
         self.lineEdit_o.setValidator(validator)
         self.lineEdit_o.textChanged.connect(self.change)
         
+        self.lineEdit_zc = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_zc.setObjectName("lineEdit_y")
+        self.lineEdit_zc.setMaxLength(1)
+        self.lineEdit_zc.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_zc, 2, 5, 1, 1)
+        self.lineEdit_zc.setValidator(validator)
+        self.lineEdit_zc.textChanged.connect(self.change)
+        self.lineEdit_zc.returnPressed.connect(self.enter)
         self.lineEdit_p = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_p.setObjectName("lineEdit_p")
         self.lineEdit_p.setMaxLength(1)
@@ -214,9 +237,18 @@ class fivewordwordle(object):
         self.lineEdit_t.setObjectName("lineEdit_t")
         self.lineEdit_t.setMaxLength(1)
         self.gridLayout.addWidget(self.lineEdit_t, 3, 4, 1, 1)
-        self.lineEdit_t.returnPressed.connect(self.enter)
         self.lineEdit_t.setValidator(validator)
         self.lineEdit_t.textChanged.connect(self.change)
+        
+        self.lineEdit_zd = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_zd.setObjectName("lineEdit_y")
+        self.lineEdit_zd.setMaxLength(1)
+        self.lineEdit_zd.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_zd, 3, 5, 1, 1)
+        self.lineEdit_zd.setValidator(validator)
+        self.lineEdit_zd.textChanged.connect(self.change)
+        self.lineEdit_zd.returnPressed.connect(self.enter)
+        
         
         self.lineEdit_u = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_u.setObjectName("lineEdit_u")
@@ -249,11 +281,20 @@ class fivewordwordle(object):
         self.lineEdit_y = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_y.setObjectName("lineEdit_y")
         self.lineEdit_y.setMaxLength(1)
-        self.lineEdit_y.returnPressed.connect(self.enter)
         self.lineEdit_y.setValidator(validator)
         self.lineEdit_y.textChanged.connect(self.change)
-        
         self.gridLayout.addWidget(self.lineEdit_y, 4, 4, 1, 1)
+        
+        self.lineEdit_z = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_z.setObjectName("lineEdit_y")
+        self.lineEdit_z.setMaxLength(1)
+        self.lineEdit_z.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_z, 4, 5, 1, 1)
+        self.lineEdit_z.setValidator(validator)
+        self.lineEdit_z.textChanged.connect(self.change)
+        
+        
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 834, 26))
@@ -274,30 +315,30 @@ class fivewordwordle(object):
         self.Winstreak.setText(_translate("MainWindow", "WinStreak:"))
     
     def randomword(self):
-        with open ("5-wordsource.txt", "r") as file:
+        with open ("6-wordsource.txt", "r") as file:
             t = random.randrange(1, 50)
             uu = file.readlines()[t]
             e = str(uu.upper().strip())
             return e
-        
+    
     def change(self,text):
         letterbox = QtWidgets.QDialog()
         letter = letterbox.sender()
         letter.setText(text.upper())
    
     def enter(self):
-        
+        d = enchant.Dict("en_US")
         self.counter += 1
         g = dictionary[self.counter]
         a = []
         j = 0
-        d = enchant.Dict("en_US")
         e = self.label.text()
         for xx in g:
             widget= getattr(self,xx)
             oo = widget.text() 
             a.append(oo)
-            
+        
+        print(a)   
         if "" in a:
             self.notenoughletter()
             return 
@@ -308,7 +349,7 @@ class fivewordwordle(object):
             self.notaword()
             return
         
-        for x in range(5):
+        for x in range(6):
                 y = getattr(self,g[x])
                 y.setReadOnly(True)
                 if e[x] == a[x]:
@@ -321,20 +362,12 @@ class fivewordwordle(object):
                 else:
                     y.setStyleSheet("background-color: rgb(255, 0, 0);")   
                     
-                if j ==5:
+                if j ==6:
                     self.pushButton_2.setEnabled(True)
                     
         
-        if self.counter == 5:
+        if self.counter == 6:
             self.losedialogbox()
-    
-        
-    
-    def next( self):
-        self.winstreak += 1
-        self.counter = 0
-        ui4.setupUi(MainWindow4)
-        MainWindow4.show()
     
     def  notaword(self):
         letterbox = QtWidgets.QMessageBox()
@@ -346,19 +379,24 @@ class fivewordwordle(object):
         for x in g:
             widget= getattr(self,x)
             widget.clear()
-        self.counter -=1
+        self.counter -=1    
+    
+    def next( self):
+        
+        self.winstreak += 1
+        self.counter = 0
+        ui6.setupUi(MainWindow6)
+        MainWindow6.show()
         
     def  notenoughletter(self):
         letterbox = QtWidgets.QMessageBox()
         letterbox.setWindowTitle("lose")
         letterbox.setText("Not enough letter")
         letterbox.exec_()
-        
         g = dictionary[self.counter]
         for x in g:
             widget= getattr(self,x)
             widget.clear()
-        self.counter -=1
             
     def losedialogbox(self):
         losebox = QtWidgets.QMessageBox()
@@ -368,7 +406,7 @@ class fivewordwordle(object):
         losebox.clickedButton(self.hidewindow())
     
     def hidewindow(self):
-        MainWindow4.hide()
+        MainWindow6.hide()
             
     def back(self):
         # MainWindow4.close()
@@ -385,18 +423,18 @@ if __name__ == "__main__":
     # ui = mainwindow()
     # ui2 = losedialog()
     # ui3 =  statistic()
-    ui4 = fivewordwordle()
+    ui6 = fivewordwordle()
 
 
     # MainWindow1 = QtWidgets.QMainWindow()
     # MainWindow3 = QtWidgets.QMainWindow()
-    MainWindow4 = QtWidgets.QMainWindow()
+    MainWindow6 = QtWidgets.QMainWindow()
     # MainWindow2 = QtWidgets.QMainWindow()
 
     # ui3.setupUi(MainWindow3)
     # ui2.setupUi(MainWindow2)
     # ui.setupUi(MainWindow1)
-    ui4.setupUi(MainWindow4)
+    ui6.setupUi(MainWindow6)
 
-    MainWindow4.show()
+    MainWindow6.show()
     sys.exit(app.exec_())

@@ -118,3 +118,26 @@ class mainwindow(object):
             self.window.close()
             # MainWindow4.show()
 
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+   
+    ui = mainwindow()
+    ui2 = losedialog()
+    ui3 =  statistic()
+    ui4 = fivewordwordle()
+    
+    
+    MainWindow1 = QtWidgets.QMainWindow()
+    MainWindow3 = QtWidgets.QMainWindow()
+    MainWindow4 = QtWidgets.QMainWindow()
+    MainWindow2 = QtWidgets.QMainWindow()
+    
+    ui3.setupUi(MainWindow3)
+    ui2.setupUi(MainWindow2)
+    ui.setupUi(MainWindow1)
+    ui4.setupUi(MainWindow4)
+    
+    MainWindow1.show()
+    sys.exit(app.exec_())
+    

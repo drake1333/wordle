@@ -19,7 +19,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-class Ui_Dialog(object):
+class login(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(377, 395)
@@ -50,7 +50,7 @@ class Ui_Dialog(object):
         self.label_2 = QtWidgets.QLabel(self.groupBox)
         self.label_2.setGeometry(QtCore.QRect(10, 80, 55, 16))
         self.label_2.setObjectName("label_2")
-
+        
         
         self.label_3 = QtWidgets.QLabel(self.groupBox)
         self.label_3.setGeometry(QtCore.QRect(10, 0, 71, 16))
@@ -63,14 +63,15 @@ class Ui_Dialog(object):
         self.label_4.setText("")
         self.label_4.setObjectName("label_4")
         self.label_5 = QtWidgets.QLabel(self.groupBox)
+        self.label_6 = QtWidgets
         self.label_5.setGeometry(QtCore.QRect(180, 140, 55, 16))
         self.label_5.setWordWrap(False)
         self.label_5.setObjectName("label_5")
         self.label_6 = QtWidgets.QLabel(self.groupBox)
         self.label_6.setGeometry(QtCore.QRect(10, 140, 111, 16))
         self.label_6.setObjectName("label_6")
-       
-        
+        self.label_6.mousePressEvent= self.click
+        # self.label_6.mouseReleaseEvent= self.click
         
         self.retranslateUi(Dialog)
         self.label_6.linkActivated['QString'].connect(self.label.update) # type: ignore
@@ -85,14 +86,15 @@ class Ui_Dialog(object):
         self.pushButton.setText(_translate("Dialog", "LOGIN"))
         self.label_5.setText(_translate("Dialog", "Sign-up"))
         self.label_6.setText(_translate("Dialog", "Forgot password"))
-    def click(Self):
+        
+    def click(Self,*args):
         print("j")
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
+    ui = login()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
