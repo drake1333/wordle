@@ -125,7 +125,7 @@ if __name__ == "__main__":
     ui = mainwindow()
     ui2 = losedialog()
     ui3 =  statistic()
-    ui4 = fivewordwordle()
+    ui4 =                           ()
     
     
     MainWindow1 = QtWidgets.QMainWindow()
