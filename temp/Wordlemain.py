@@ -15,7 +15,7 @@ from PyQt5.QtGui import QFont
 
 from mainscreen import mainwindow
 from statistic import statistic
-from fivewordwordle import fivewordwordle
+from fivewordwordle import fivewordwordle                                                                       
 from losedialog import losedialog
 
 

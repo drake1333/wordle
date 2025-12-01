@@ -73,6 +73,14 @@ dictionary3 = {
     
 }
 
+dictionary4 = {
+1:  ["lineEdit_a","lineEdit_b","lineEdit_c","lineEdit_d","lineEdit_e", "lineEdit_za"],
+2:  ["lineEdit_f","lineEdit_g","lineEdit_h","lineEdit_m","lineEdit_i","lineEdit_zb"],
+3:  ["lineEdit_j","lineEdit_k","lineEdit_l","lineEdit_n","lineEdit_o","lineEdit_zc"],
+4:  ["lineEdit_p","lineEdit_q","lineEdit_r","lineEdit_s","lineEdit_t","lineEdit_zd"],
+5:  ["lineEdit_u","lineEdit_v","lineEdit_w","lineEdit_x","lineEdit_y","lineEdit_z"]
+    
+}
 
 # ---------------- Helper: update stats in DB ----------------
 def update_stats_db(username, win: bool):
@@ -99,7 +107,407 @@ def update_stats_db(username, win: bool):
     conn.close()
     return True
 
-# ---------------- Classes for GUIs ----------------
+class Dailyword(object):
+    def __init__(self):
+        self.counter = 0
+        self.winstreak = 0
+     
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(834, 499)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
+        MainWindow.setSizePolicy(sizePolicy)
+        MainWindow.setStyleSheet("")
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(10, 40, 61, 31))
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton.clicked.connect(self.back)
+        
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setGeometry(QtCore.QRect(370, 400, 61, 31))
+        self.pushButton_2.setEnabled(False)
+        self.pushButton_2.clicked.connect(self.complete)
+        
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(330, 50, 55, 16))
+        self.label.setText(self.randomword())
+        self.label.setObjectName("label")
+        self.winstreak2 = QtWidgets.QLabel(self.centralwidget)
+        self.winstreak2.setGeometry(QtCore.QRect(160, 40, 81, 21))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        
+        self.widget = QtWidgets.QWidget(self.centralwidget)
+        self.widget.setGeometry(QtCore.QRect(40, 110, 761, 271))
+        self.widget.setObjectName("widget")
+        self.gridLayout = QtWidgets.QGridLayout(self.widget)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setObjectName("gridLayout")
+        
+        regex = QRegExp("^[a-zA-Z]+$")
+        validator = QRegExpValidator(regex)
+        self.lineEdit_a = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_a.setObjectName("lineEdit_a")
+        self.lineEdit_a.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_a, 0, 0, 1, 1)
+        self.lineEdit_a.setValidator(validator)
+        self.lineEdit_a.textChanged.connect(self.change)
+         
+        self.lineEdit_b = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_b.setObjectName("lineEdit_b")
+        self.lineEdit_b.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_b, 0, 1, 1, 1)
+        self.lineEdit_b.setValidator(validator)
+        self.lineEdit_b.textChanged.connect(self.change)
+        
+        self.lineEdit_c = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_c.setObjectName("lineEdit_c")
+        self.lineEdit_c.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_c, 0, 2, 1, 1)
+        self.lineEdit_c.setValidator(validator)
+        self.lineEdit_c.textChanged.connect(self.change)
+        
+        self.lineEdit_d = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_d.setObjectName("lineEdit_d")
+        self.gridLayout.addWidget(self.lineEdit_d, 0, 3, 1, 1)
+        self.lineEdit_d.setMaxLength(1)
+        self.lineEdit_d.setValidator(validator)
+        self.lineEdit_d.textChanged.connect(self.change)
+        
+        self.lineEdit_e = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_e.setObjectName("lineEdit_e")
+        self.lineEdit_e.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_e, 0, 4, 1, 1)
+        self.lineEdit_e.setValidator(validator)
+        self.lineEdit_e.textChanged.connect(self.change)
+        
+        self.lineEdit_za = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_za.setObjectName("lineEdit_y")
+        self.lineEdit_za.setMaxLength(1)
+        self.lineEdit_za.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_za, 0, 5, 1, 1)
+        self.lineEdit_za.setValidator(validator)
+        self.lineEdit_za.textChanged.connect(self.change)
+        self.lineEdit_za.returnPressed.connect(self.enter)
+        
+        self.lineEdit_f = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_f.setObjectName("lineEdit_f")
+        self.lineEdit_f.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_f, 1, 0, 1, 1)
+        self.lineEdit_f.setValidator(validator)
+        self.lineEdit_f.textChanged.connect(self.change)
+        
+        self.lineEdit_g = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_g.setObjectName("lineEdit_g")
+        self.lineEdit_g.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_g, 1, 1, 1, 1)
+        self.lineEdit_g.setValidator(validator)
+        self.lineEdit_g.textChanged.connect(self.change)
+        
+        self.lineEdit_h = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_h.setObjectName("lineEdit_h")
+        self.lineEdit_h.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_h, 1, 2, 1, 1)
+        self.lineEdit_h.setValidator(validator)
+        self.lineEdit_h.textChanged.connect(self.change)
+        
+        self.lineEdit_m = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_m.setObjectName("lineEdit_m")
+        self.lineEdit_m.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_m, 1, 3, 1, 1)
+        self.lineEdit_m.setValidator(validator)
+        self.lineEdit_m.textChanged.connect(self.change)
+        
+        self.lineEdit_i = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_i.setObjectName("lineEdit_i")
+        self.lineEdit_i.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_i, 1, 4, 1, 1)
+        self.lineEdit_i.setValidator(validator)
+        self.lineEdit_i.textChanged.connect(self.change)
+        
+        self.lineEdit_zb = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_zb.setObjectName("lineEdit_y")
+        self.lineEdit_zb.setMaxLength(1)
+        self.lineEdit_zb.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_zb, 1, 5, 1, 1)
+        self.lineEdit_zb.setValidator(validator)
+        self.lineEdit_zb.textChanged.connect(self.change)
+        self.lineEdit_zb.returnPressed.connect(self.enter)
+        
+        self.lineEdit_j = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_j.setObjectName("lineEdit_j")
+        self.lineEdit_j.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_j, 2, 0, 1, 1)
+        self.lineEdit_j.setValidator(validator)
+        self.lineEdit_j.textChanged.connect(self.change)
+        
+        self.lineEdit_k = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_k.setObjectName("lineEdit_k")
+        self.lineEdit_k.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_k, 2, 1, 1, 1)
+        self.lineEdit_k.setValidator(validator)
+        self.lineEdit_k.textChanged.connect(self.change)
+        
+        self.lineEdit_l = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_l.setObjectName("lineEdit_l")
+        self.lineEdit_l.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_l, 2, 2, 1, 1)
+        self.lineEdit_l.setValidator(validator)
+        self.lineEdit_l.textChanged.connect(self.change)
+        
+        self.lineEdit_n = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_n.setObjectName("lineEdit_n")
+        self.lineEdit_n.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_n, 2, 3, 1, 1)
+        self.lineEdit_n.setValidator(validator)
+        self.lineEdit_n.textChanged.connect(self.change)
+        
+        self.lineEdit_o = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_o.setObjectName("lineEdit_o")
+        self.lineEdit_o.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_o, 2, 4, 1, 1)
+        self.lineEdit_o.setValidator(validator)
+        self.lineEdit_o.textChanged.connect(self.change)
+        
+        self.lineEdit_zc = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_zc.setObjectName("lineEdit_y")
+        self.lineEdit_zc.setMaxLength(1)
+        self.lineEdit_zc.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_zc, 2, 5, 1, 1)
+        self.lineEdit_zc.setValidator(validator)
+        self.lineEdit_zc.textChanged.connect(self.change)
+        self.lineEdit_zc.returnPressed.connect(self.enter)
+        self.lineEdit_p = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_p.setObjectName("lineEdit_p")
+        self.lineEdit_p.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_p, 3, 0, 1, 1)
+        self.lineEdit_p.setValidator(validator)
+        self.lineEdit_p.textChanged.connect(self.change)
+        
+        self.lineEdit_q = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_q.setObjectName("lineEdit_q")
+        self.lineEdit_q.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_q, 3, 1, 1, 1)
+        self.lineEdit_q.setValidator(validator)
+        self.lineEdit_q.textChanged.connect(self.change)
+        
+        self.lineEdit_r = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_r.setObjectName("lineEdit_r")
+        self.lineEdit_r.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_r, 3, 2, 1, 1)
+        self.lineEdit_r.setValidator(validator)
+        self.lineEdit_r.textChanged.connect(self.change)
+        
+        self.lineEdit_s = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_s.setObjectName("lineEdit_s")
+        self.lineEdit_s.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_s, 3, 3, 1, 1)
+        self.lineEdit_s.setValidator(validator)
+        self.lineEdit_s.textChanged.connect(self.change)
+        
+        self.lineEdit_t = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_t.setObjectName("lineEdit_t")
+        self.lineEdit_t.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_t, 3, 4, 1, 1)
+        self.lineEdit_t.setValidator(validator)
+        self.lineEdit_t.textChanged.connect(self.change)
+        
+        self.lineEdit_zd = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_zd.setObjectName("lineEdit_y")
+        self.lineEdit_zd.setMaxLength(1)
+        self.lineEdit_zd.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_zd, 3, 5, 1, 1)
+        self.lineEdit_zd.setValidator(validator)
+        self.lineEdit_zd.textChanged.connect(self.change)
+        self.lineEdit_zd.returnPressed.connect(self.enter)
+        
+        
+        self.lineEdit_u = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_u.setObjectName("lineEdit_u")
+        self.lineEdit_u.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_u, 4, 0, 1, 1)
+        self.lineEdit_u.setValidator(validator)
+        self.lineEdit_u.textChanged.connect(self.change)
+        
+        self.lineEdit_v = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_v.setObjectName("lineEdit_v")
+        self.lineEdit_v.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_v, 4, 1, 1, 1)
+        self.lineEdit_v.setValidator(validator)
+        self.lineEdit_v.textChanged.connect(self.change)
+        
+        self.lineEdit_w = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_w.setObjectName("lineEdit_w")
+        self.lineEdit_w.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_w, 4, 2, 1, 1)
+        self.lineEdit_w.setValidator(validator)
+        self.lineEdit_w.textChanged.connect(self.change)
+        
+        self.lineEdit_x = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_x.setObjectName("lineEdit_x")
+        self.lineEdit_x.setMaxLength(1)
+        self.gridLayout.addWidget(self.lineEdit_x, 4, 3, 1, 1)
+        self.lineEdit_x.setValidator(validator)
+        self.lineEdit_x.textChanged.connect(self.change)
+        
+        self.lineEdit_y = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_y.setObjectName("lineEdit_y")
+        self.lineEdit_y.setMaxLength(1)
+        self.lineEdit_y.setValidator(validator)
+        self.lineEdit_y.textChanged.connect(self.change)
+        self.gridLayout.addWidget(self.lineEdit_y, 4, 4, 1, 1)
+        
+        self.lineEdit_z = QtWidgets.QLineEdit(self.widget)
+        self.lineEdit_z.setObjectName("lineEdit_y")
+        self.lineEdit_z.setMaxLength(1)
+        self.lineEdit_z.returnPressed.connect(self.enter)
+        self.gridLayout.addWidget(self.lineEdit_z, 4, 5, 1, 1)
+        self.lineEdit_z.setValidator(validator)
+        self.lineEdit_z.textChanged.connect(self.change)
+        
+        
+
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 834, 26))
+        self.menubar.setObjectName("menubar")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.pushButton.setText(_translate("MainWindow", "Back"))
+        self.pushButton_2.setText(_translate("MainWindow", "Complete"))
+        
+    
+    def randomword(self):
+        with open ("dailyword.txt", "r") as file:
+            t = random.randrange(1, 49)
+            uu = file.readlines()[t]
+            e = str(uu.upper().strip())
+            return e
+    
+    def change(self,text):
+        letterbox = QtWidgets.QDialog()
+        letter = letterbox.sender()
+        letter.setText(text.upper())
+   
+    def enter(self):
+        d = enchant.Dict("en_US")
+        
+        g = dictionary4[self.counter + 1]  
+        a = []
+        e = self.label.text()          
+
+        for xx in g:
+            widget = getattr(self, xx)
+            a.append(widget.text())
+
+        if "" in a:
+            self.notenoughletter()
+            return
+
+        p = "".join(a)
+
+        if not d.check(p):
+            self.notaword()
+            return
+
+    
+        target_letters = list(e)
+        result_colors = [""] * 6
+
+       
+        for x in range(6):
+            widget = getattr(self, g[x])
+            if a[x] == e[x]:
+                widget.setStyleSheet("background-color: rgb(0, 170, 0);")
+                target_letters[x] = None  
+                result_colors[x] = "green"
+
+      
+        for x in range(6):
+            widget = getattr(self, g[x])
+            if result_colors[x] == "": 
+                if a[x] in target_letters:
+                    widget.setStyleSheet("background-color: rgb(255, 255, 0);")
+                  
+                    target_letters[target_letters.index(a[x])] = None
+                else:
+                    widget.setStyleSheet("background-color: rgb(255, 0, 0);")
+
+        self.counter += 1
+        if a == list(e):
+            self.pushButton_2.setEnabled(True)
+
+        
+        if self.counter == 5:
+           
+            if CURRENT_USER:
+                update_stats_db(CURRENT_USER, win=False)
+            self.losedialogbox()
+
+    
+    def  notaword(self):
+        letterbox = QtWidgets.QMessageBox()
+        letterbox.setWindowTitle("lose")
+        letterbox.setText("invalid word")
+        letterbox.exec_()
+        
+        g = dictionary4[self.counter]
+        for x in g:
+            widget= getattr(self,x)
+            widget.clear()
+        self.counter -=1    
+    
+    def complete( self):
+        
+        if CURRENT_USER:
+            update_stats_db(CURRENT_USER, win=True)
+        else:
+            QMessageBox.information(None, "Notice", "No current user — stats not recorded.")
+        
+        self.counter = 0
+        Mainwindow8.hide()
+        MainWindow1.show()
+        
+    def  notenoughletter(self):
+        letterbox = QtWidgets.QMessageBox()
+        letterbox.setWindowTitle("lose")
+        letterbox.setText("Not enough letter")
+        letterbox.exec_()
+        g = dictionary4[self.counter]
+        for x in g:
+            widget= getattr(self,x)
+            widget.clear()
+        print(self.counter)
+        self.counter -= 1    
+    def losedialogbox(self):
+        losebox = QtWidgets.QMessageBox()
+        losebox.setWindowTitle("lose")
+        losebox.setText("You lose")
+        losebox.exec_()
+        # After loss dialog, hide/close this game window
+        self.hidewindow()
+    
+    def hidewindow(self):
+        MainWindow8.hide()
+        MainWindow1.show()    
+    def back(self):
+        Mainwindow8.close()
+        MainWindow1.show()
+
 
 class sixwordwordle(object):
     def __init__(self):
@@ -411,8 +819,8 @@ class sixwordwordle(object):
    
     def enter(self):
         d = enchant.Dict("en_US")
-        self.counter += 1
-        g = dictionary3[self.counter]  
+        
+        g = dictionary3[self.counter + 1]  
         a = []
         e = self.label.text()          
 
@@ -420,16 +828,14 @@ class sixwordwordle(object):
             widget = getattr(self, xx)
             a.append(widget.text())
 
-      
-
-
-        if "" in a:
-            self.notenoughletter()
-            return
+        print(a)
+        # if "" in a:
+        #     self.notenoughletter()
+        #     return
 
         p = "".join(a)
 
-        if not d.check(p):
+        if not d.check(a):
             self.notaword()
             return
 
@@ -456,13 +862,13 @@ class sixwordwordle(object):
                 else:
                     widget.setStyleSheet("background-color: rgb(255, 0, 0);")
 
+        self.counter += 1
         if a == list(e):
             self.pushButton_2.setEnabled(True)
 
         
         if self.counter == 5:
-            # user ran out of tries -> loss
-            # update stats for loss
+           
             if CURRENT_USER:
                 update_stats_db(CURRENT_USER, win=False)
             self.losedialogbox()
@@ -480,7 +886,7 @@ class sixwordwordle(object):
             widget.clear()
         self.counter -=1    
     
-    def next( self):
+    def next (self):
         # Called when user has guessed correctly and clicks Next
         # Update stats to reflect a win
         if CURRENT_USER:
@@ -501,6 +907,7 @@ class sixwordwordle(object):
         for x in g:
             widget= getattr(self,x)
             widget.clear()
+        self.counter -= 1
             
     def losedialogbox(self):
         losebox = QtWidgets.QMessageBox()
@@ -896,6 +1303,8 @@ class fivewordwordle(object):
         self.pushButton_2.setEnabled(False)
         self.pushButton_2.clicked.connect(self.next)
         
+        
+        
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(330, 50, 55, 16))
         self.label.setText(self.randomword())
@@ -1243,36 +1652,34 @@ class fivewordwordle(object):
         self.winstreak = 0
         MainWindow1.show()
     
+from PyQt5 import QtWidgets, QtGui, QtCore
+
+# Note: I am assuming your necessary imports (like QtWidgets) are present in the full script.
+
 class mainwindow(object):
     def __init__(self):
         self.window = None
         
     def setupUi(self, MainWindow):
-        self.window = mainwindow
+        # Setting the main window reference
+        self.window = MainWindow 
         
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(603, 631)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(230, 390, 141, 41))
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton.clicked.connect(self.statistic)
+        # --- Labels and Combo Box (Using absolute positioning as per provided design) ---
         
-        
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(230, 470, 141, 41))
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_2.clicked.connect(self.exit)
-        
-        
+        # Difficulty Label
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(240, 200, 141, 16))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label.setFont(font)
         self.label.setObjectName("label")
+        
+        # Title Label
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(220, 80, 291, 61))
         font = QtGui.QFont()
@@ -1280,26 +1687,76 @@ class mainwindow(object):
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         
-        
-        
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(230, 320, 141, 41))
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.pushButton_3.clicked.connect(self.text)
-        
-        
-        
+        # Combo Box (Difficulty Selector)
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox.setGeometry(QtCore.QRect(180, 240, 241, 41))
         self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("4 Word wordle")
-        self.comboBox.addItem("5 Word wordle")
-        self.comboBox.addItem("6 Word wordle")
-        self.comboBox.setItemText(3, "")
-        text = str(self.comboBox.currentText())
-       
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        
+        # --- Button Container (QWidget and QGridLayout) ---
+        
+        self.widget = QtWidgets.QWidget(self.centralwidget)
+        # Position the button container below the combo box, centered
+        self.widget.setGeometry(QtCore.QRect(220, 280, 171, 311)) 
+        self.widget.setObjectName("widget")
+        self.gridLayout = QtWidgets.QGridLayout(self.widget)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setObjectName("gridLayout")
+        
+        # --- Buttons (Added to Grid Layout and Connected to Methods) ---
+
+        # pushButton_4 (PLAY) -> Connected to self.text (as per original logic for starting game based on combo box)
+        self.pushButton_4 = QtWidgets.QPushButton(self.widget)
+        self.pushButton_4.setMaximumSize(QtCore.QSize(141, 41))
+        self.pushButton_4.setObjectName("pushButton_4")
+        self.gridLayout.addWidget(self.pushButton_4, 0, 0, 1, 1)
+        self.pushButton_4.clicked.connect(self.text)
+        
+        self.label_23 = QtWidgets.QLabel(self.centralwidget)
+        self.label_23.setGeometry(QtCore.QRect(70, 10, 121, 31))
+        self.label_23.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.label_23.setFrameShape(QtWidgets.QFrame.Box)
+        self.label_23.setLineWidth(1)
+        self.label_23.setText("")
+        self.label_23.setObjectName("label_2")
         
         
+        start = time.time()
+        local_time = time.ctime(start)
+        self.label_23.setText(local_time)
+        
+        
+        self.pushButton_3 = QtWidgets.QPushButton(self.widget)
+        self.pushButton_3.setMaximumSize(QtCore.QSize(141, 41))
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.setEnabled(True)
+        self.gridLayout.addWidget(self.pushButton_3, 1, 0, 1, 1)
+        self.pushButton_3.clicked.connect(self.dailyword)
+        # self.pushButton_3.setEnabled(False)
+        # pushButton (STATISTIC) -> Connected to self.statistic
+        self.pushButton = QtWidgets.QPushButton(self.widget)
+        self.pushButton.setMaximumSize(QtCore.QSize(141, 41))
+        self.pushButton.setObjectName("pushButton")
+        self.gridLayout.addWidget(self.pushButton, 6, 0, 1, 1) # Note the row jump to 6
+        self.pushButton.clicked.connect(self.statistic)
+        
+        # pushButton_5 (OPTIONS) -> Connected to self.option
+        self.pushButton_5 = QtWidgets.QPushButton(self.widget)
+        self.pushButton_5.setMaximumSize(QtCore.QSize(141, 41))
+        self.pushButton_5.setObjectName("pushButton_5")
+        self.gridLayout.addWidget(self.pushButton_5, 7, 0, 1, 1)
+        self.pushButton_5.clicked.connect(self.option)
+        
+        
+        self.pushButton_2 = QtWidgets.QPushButton(self.widget)
+        self.pushButton_2.setMaximumSize(QtCore.QSize(141, 41))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.gridLayout.addWidget(self.pushButton_2, 9, 0, 1, 1) # Note the row jump to 9
+        self.pushButton_2.clicked.connect(self.exit)
+        
+        # --- Main Window Setup ---
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 603, 26))
@@ -1315,22 +1772,37 @@ class mainwindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton.setText(_translate("MainWindow", "PRoFILE / STATISTIC"))
-        self.pushButton_2.setText(_translate("MainWindow", "EXIT"))
         self.label.setText(_translate("MainWindow", "DIFFICULTY"))
         self.label_2.setText(_translate("MainWindow", "WORDLE"))
-        self.pushButton_3.setText(_translate("MainWindow", "PLAY"))
-     
         
+      
+        self.comboBox.setItemText(0, _translate("MainWindow", "4 Word wordle"))
+        self.comboBox.setItemText(1, _translate("MainWindow", "5 Word wordle"))
+        self.comboBox.setItemText(2, _translate("MainWindow", "6 Word wordle"))
+        
+        
+        self.pushButton_4.setText(_translate("MainWindow", "PLAY"))
+        self.pushButton_3.setText(_translate("MainWindow", "DAILY WORD"))
+        self.pushButton.setText(_translate("MainWindow", "STATISTIC"))
+        self.pushButton_5.setText(_translate("MainWindow", "OPTIONS"))
+        self.pushButton_2.setText(_translate("MainWindow", "EXIT"))
+        
+    
+    def dailyword(self):
+        
+        MainWindow1.hide()
+        Mainwindow8.show()
+    def option(self):
+        MainWindow1.hide()
     
     def exit(self):
         exit()
         
     def statistic(self):
-        # show statistics window, but first load the current user's stats
         MainWindow1.hide()
         ui3.load_stats()
         MainWindow3.show()
+        
     def text(self):
         gg = (self.comboBox.currentText())
         if gg == "4 Word wordle":
@@ -1345,7 +1817,6 @@ class mainwindow(object):
             MainWindow1.hide()
             ui6.setupUi(MainWindow6)
             MainWindow6.show()
-    
 class login(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -1411,7 +1882,8 @@ class login(object):
         self.label_3.setText(_translate("Dialog", "Username:"))
         self.pushButton.setText(_translate("Dialog", "LOGIN"))
         self.label_5.setText(_translate("Dialog", "Sign-up"))
-       
+        
+        
        
     def login_check(self):
         global CURRENT_USER
@@ -1457,7 +1929,12 @@ class statistic(object):
         font.setPointSize(18)
         self.label.setFont(font)
         self.label.setObjectName("label")
-       
+        self.label_2 = QtWidgets.QLabel(self.frame)
+        self.label_2.setGeometry(QtCore.QRect(40, 160, 131, 41))
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.frame)
         self.label_3.setGeometry(QtCore.QRect(40, 50, 141, 41))
         font = QtGui.QFont()
@@ -1502,19 +1979,32 @@ class statistic(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
+        
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(10, 40, 61, 31))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.back)
+        self.pushButton.setText("Back")
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.label_23 = QtWidgets.QLabel(self.centralwidget)
+        self.label_23.setGeometry(QtCore.QRect(70, 10, 121, 31))
+        self.label_23.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.label_23.setFrameShape(QtWidgets.QFrame.Box)
+        self.label_23.setLineWidth(1)
+        self.label_23.setText("")
+        self.label_23.setObjectName("label_2")
+        
+        
+        start = time.time()
+        local_time = time.ctime(start)
+        self.label_23.setText(local_time)
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label.setText(_translate("MainWindow", "Statistics"))
-       
+        self.label_2.setText(_translate("MainWindow", "Last Date Played:"))
         self.label_3.setText(_translate("MainWindow", "Name: "))
         self.label_4.setText(_translate("MainWindow", "UID: "))
         self.label_5.setText(_translate("MainWindow", "Wins:"))
@@ -1618,7 +2108,11 @@ class signup(object):
         self.pushButton = QtWidgets.QPushButton(self.groupBox)
         self.pushButton.setGeometry(QtCore.QRect(80, 220, 93, 28))
         self.pushButton.clicked.connect(self.save_user)
-
+        
+        self.backButton1 = QtWidgets.QPushButton(Dialog)
+        self.backButton1.setGeometry(QtCore.QRect(20, 20, 60, 30))
+        self.backButton1.setText("Back")
+        self.backButton1.clicked.connect(self.back)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -1651,7 +2145,10 @@ class signup(object):
 
         finally:
             conn.close()
-
+    def back(self):
+        MainWindow7.hide()
+        MainWindow2.show()
+    
     def show_msg(self, text):
         msg = QtWidgets.QMessageBox()
         msg.setWindowTitle("Message")
@@ -1684,6 +2181,7 @@ if __name__ == "__main__":
     ui5 = fourwordwordle()
     ui6 = sixwordwordle()
     ui7 = signup()
+    ui8 = Dailyword()
     
     MainWindow1 = QtWidgets.QMainWindow()
     MainWindow2 = QtWidgets.QMainWindow()
@@ -1692,7 +2190,7 @@ if __name__ == "__main__":
     MainWindow5 = QtWidgets.QMainWindow()
     MainWindow6 = QtWidgets.QMainWindow()
     MainWindow7 = QtWidgets.QMainWindow()
-    
+    Mainwindow8 = QtWidgets.QMainWindow()
    
    
     ui.setupUi(MainWindow1)
@@ -1702,5 +2200,6 @@ if __name__ == "__main__":
     ui5.setupUi(MainWindow5)
     ui6.setupUi(MainWindow6)
     ui7.setupUi(MainWindow7)
+    ui8.setupUi(Mainwindow8)
     MainWindow2.show()
     sys.exit(app.exec_())
