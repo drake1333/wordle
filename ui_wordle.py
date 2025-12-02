@@ -2,7 +2,7 @@ import random
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMessageBox
-import config # CHANGED: Import entire module
+import config
 from config import WORDLE_DICTIONARIES
 from database import update_stats_db
 from utils import configure_letter_edit, clear_row_widgets, daily_word_from_file, is_valid_word, refresh_daily_button_state
@@ -76,6 +76,13 @@ class BaseWordle:
         QMessageBox.information(None, "Win", "You won!")
 
     def on_lose(self):
+        if self.letters_count == 4:
+            config.WINSTREAK_4 = 0
+        elif self.letters_count == 5:
+            config.WINSTREAK_5 = 0
+        elif self.letters_count == 6:
+            config.WINSTREAK_6 = 0
+            
         QMessageBox.information(None, "Lose", "You lose. The word was " + self.target_word)
         self.back_clicked()
 
@@ -97,6 +104,9 @@ class FourWordle(BaseWordle):
         super().__init__(letters_count=4)
 
     def setupUi(self, MainWindow, MainWindowMain_ref):
+        if hasattr(self, 'MainWindow') and self.MainWindow and self.MainWindow.centralWidget():
+            self.MainWindow.centralWidget().deleteLater()
+
         self.MainWindowMain_ref = MainWindowMain_ref
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
@@ -104,7 +114,6 @@ class FourWordle(BaseWordle):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         
         self.title = QtWidgets.QLabel(self.centralwidget); self.title.setGeometry(QtCore.QRect(320, 10, 260, 40)); f=QFont(); f.setPointSize(16); f.setBold(True); self.title.setFont(f); self.title.setText("4-Word Wordle")
-        # CHANGED: Use config.WINSTREAK_4
         self.label_winstreak = QtWidgets.QLabel(self.centralwidget); self.label_winstreak.setGeometry(QtCore.QRect(620,20,160,24)); fw=QFont(); fw.setPointSize(12); fw.setBold(True); self.label_winstreak.setFont(fw); self.label_winstreak.setText(f"Winstreak: {config.WINSTREAK_4}")
         
         self.widget = QtWidgets.QWidget(self.centralwidget); self.widget.setGeometry(QtCore.QRect(40,80,720,360))
@@ -130,10 +139,12 @@ class FourWordle(BaseWordle):
         self.next_btn = QtWidgets.QPushButton(self.centralwidget); self.next_btn.setGeometry(QtCore.QRect(340,460,120,32)); self.next_btn.setText("Next"); self.next_btn.setEnabled(False); self.next_btn.clicked.connect(self.next_clicked)
         self.back_btn = QtWidgets.QPushButton(self.centralwidget); self.back_btn.setGeometry(QtCore.QRect(20,20,80,30)); self.back_btn.setText("Back"); self.back_btn.clicked.connect(self.back_clicked)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.target_word = self.get_target_word("4-wordsource.txt")
+        
+        # Only set target word if it hasn't been set (i.e., this is the first time setupUi runs)
+        if not self.target_word:
+            self.target_word = self.get_target_word("4-wordsource.txt")
 
     def on_win(self):
-        # CHANGED: Use config.CURRENT_USER
         if config.CURRENT_USER:
             update_stats_db(config.CURRENT_USER, win=True, set_last_daily_play=False)
         self.next_btn.setEnabled(True)
@@ -141,21 +152,22 @@ class FourWordle(BaseWordle):
     def on_lose(self):
         if config.CURRENT_USER:
             update_stats_db(config.CURRENT_USER, win=False, set_last_daily_play=False)
-        QMessageBox.information(None, "Lose", "You lose. The word was " + self.target_word)
-        self.back_clicked()
+        super().on_lose() 
 
     def next_clicked(self):
-        # CHANGED: Update config.WINSTREAK_4
         config.WINSTREAK_4 += 1
         self.label_winstreak.setText(f"Winstreak: {config.WINSTREAK_4}")
         self.next_btn.setEnabled(False)
-        self.__init__() 
+        
+     
+        self.counter = 0 
+        self.target_word = self.get_target_word("4-wordsource.txt")
+        
+        self.MainWindow.setWindowTitle("4-Word Wordle") 
         self.setupUi(self.MainWindow, self.MainWindowMain_ref)
         self.MainWindow.show()
 
     def back_clicked(self):
-        # CHANGED: Reset config.WINSTREAK_4
-        config.WINSTREAK_4 = 0
         try:
             self.MainWindow.hide()
             self.MainWindowMain_ref.show()
@@ -169,6 +181,9 @@ class FiveWordle(FourWordle):
         self.grid_map = WORDLE_DICTIONARIES.get(5)
 
     def setupUi(self, MainWindow, MainWindowMain_ref):
+        if hasattr(self, 'MainWindow') and self.MainWindow and self.MainWindow.centralWidget():
+            self.MainWindow.centralWidget().deleteLater()
+
         self.MainWindowMain_ref = MainWindowMain_ref
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
@@ -200,18 +215,22 @@ class FiveWordle(FourWordle):
         self.next_btn = QtWidgets.QPushButton(self.centralwidget); self.next_btn.setGeometry(QtCore.QRect(340,440,120,32)); self.next_btn.setText("Next"); self.next_btn.setEnabled(False); self.next_btn.clicked.connect(self.next_clicked)
         self.back_btn = QtWidgets.QPushButton(self.centralwidget); self.back_btn.setGeometry(QtCore.QRect(20,20,80,30)); self.back_btn.setText("Back"); self.back_btn.clicked.connect(self.back_clicked)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.target_word = self.get_target_word("5-wordsource.txt")
+        if not self.target_word:
+            self.target_word = self.get_target_word("5-wordsource.txt")
         
     def next_clicked(self):
         config.WINSTREAK_5 += 1
         self.label_winstreak.setText(f"Winstreak: {config.WINSTREAK_5}")
         self.next_btn.setEnabled(False)
-        self.__init__() 
-        self.setupUi(self.MainWindow, self.MainWindowMain_ref)
+        
+        self.counter = 0 
+        self.target_word = self.get_target_word("5-wordsource.txt")
+        
+        self.MainWindow.setWindowTitle("5-Word Wordle")
+        self.setupUi(self.MainWindow, self.MainWindowMain_ref) 
         self.MainWindow.show()
 
     def back_clicked(self):
-        config.WINSTREAK_5 = 0
         try:
             self.MainWindow.hide()
             self.MainWindowMain_ref.show()
@@ -225,6 +244,9 @@ class SixWordle(FourWordle):
         self.grid_map = WORDLE_DICTIONARIES.get(6)
 
     def setupUi(self, MainWindow, MainWindowMain_ref):
+        if hasattr(self, 'MainWindow') and self.MainWindow and self.MainWindow.centralWidget():
+            self.MainWindow.centralWidget().deleteLater()
+
         self.MainWindowMain_ref = MainWindowMain_ref
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
@@ -256,18 +278,23 @@ class SixWordle(FourWordle):
         self.next_btn = QtWidgets.QPushButton(self.centralwidget); self.next_btn.setGeometry(QtCore.QRect(380,460,120,32)); self.next_btn.setText("Next"); self.next_btn.setEnabled(False); self.next_btn.clicked.connect(self.next_clicked)
         self.back_btn = QtWidgets.QPushButton(self.centralwidget); self.back_btn.setGeometry(QtCore.QRect(20,20,80,30)); self.back_btn.setText("Back"); self.back_btn.clicked.connect(self.back_clicked)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.target_word = self.get_target_word("6-wordsource.txt")
+        if not self.target_word:
+            self.target_word = self.get_target_word("6-wordsource.txt")
         
     def next_clicked(self):
         config.WINSTREAK_6 += 1
         self.label_winstreak.setText(f"Winstreak: {config.WINSTREAK_6}")
         self.next_btn.setEnabled(False)
-        self.__init__() 
+        
+        
+        self.counter = 0 
+        self.target_word = self.get_target_word("6-wordsource.txt")
+        
+        self.MainWindow.setWindowTitle("6-Word Wordle") 
         self.setupUi(self.MainWindow, self.MainWindowMain_ref)
         self.MainWindow.show()
 
     def back_clicked(self):
-        config.WINSTREAK_6 = 0
         try:
             self.MainWindow.hide()
             self.MainWindowMain_ref.show()
@@ -280,6 +307,9 @@ class DailyWordUI(BaseWordle):
         self.grid_map = WORDLE_DICTIONARIES.get(6)
         
     def setupUi(self, MainWindow, MainWindowMain_ref, main_ui_instance):
+        if hasattr(self, 'MainWindow') and self.MainWindow and self.MainWindow.centralWidget():
+            self.MainWindow.centralWidget().deleteLater()
+            
         self.MainWindowMain_ref = MainWindowMain_ref
         self.main_ui_instance = main_ui_instance
         self.MainWindow = MainWindow

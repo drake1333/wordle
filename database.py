@@ -35,7 +35,7 @@ def update_stats_db(username, win: bool, set_last_daily_play=False):
         return False
     conn, cursor = get_db()
     
-    # Check if stats row exists
+   
     cursor.execute("SELECT wins, losses FROM statistics WHERE username=?", (username,))
     row = cursor.fetchone()
     

@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
-import config  # CHANGED: Import entire module
+import config  
 from database import authenticate_user, register_user
 from utils import refresh_daily_button_state
 
@@ -43,7 +43,7 @@ class LoginUI(object):
             return
             
         if authenticate_user(username, password):
-            # CHANGED: Update the actual config module variable
+       
             config.CURRENT_USER = username
             refresh_daily_button_state(self.main_ui_instance)
             try:

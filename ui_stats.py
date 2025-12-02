@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
-import config  # CHANGED: Import entire module
+import config  
 from database import get_user_stats
 
 class StatisticUI(object):
@@ -72,7 +72,7 @@ class StatisticUI(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
     def load_stats(self):
-        # CHANGED: Use config.CURRENT_USER
+
         if not config.CURRENT_USER:
             self.label_name.setText("Name: -")
             self.label_uid.setText("UID: -")

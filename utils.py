@@ -1,7 +1,7 @@
 import os
 import json
 import random
-import config  # CHANGED: Import entire module
+import config  
 from datetime import date
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QRegExp, Qt
@@ -112,7 +112,6 @@ def clear_row_widgets(widgets):
                 w.blockSignals(False)
 
 def refresh_daily_button_state(main_ui_instance):
-    # Uses config.CURRENT_USER directly
     try:
         if config.CURRENT_USER:
             allowed = can_play_daily(config.CURRENT_USER)

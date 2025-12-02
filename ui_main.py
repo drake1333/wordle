@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QComboBox, QPushButton, QVBoxLayout
-import config  # CHANGED: Import entire module
+import config  
 from utils import load_options, save_options, apply_options
 
 class MainWindowUI(object):
